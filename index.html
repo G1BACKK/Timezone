@@ -34,20 +34,29 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .header {
+        .top-result {
             background: linear-gradient(to right, #2d4059, #1c2d4d);
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        h1 {
-            font-size: 2rem;
+        .chinese-time-top {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4cc9f0;
             margin-bottom: 5px;
-            background: linear-gradient(to right, #4cc9f0, #4361ee);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        }
+        
+        .chinese-label {
+            font-size: 1rem;
+            color: #b8c1ec;
+            margin-bottom: 5px;
+        }
+        
+        .chinese-diff {
+            color: #b8c1ec;
+            font-size: 0.9rem;
         }
         
         .main-content {
@@ -248,13 +257,19 @@
                 padding: 0;
                 margin-bottom: 25px;
             }
+            
+            .chinese-time-top {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-globe-asia"></i> Time Zone Converter</h1>
+        <div class="top-result">
+            <div class="chinese-label">CHINESE TIME (CST)</div>
+            <div class="chinese-time-top" id="chineseTimeTop">14:30</div>
+            <div class="chinese-diff">UTC +8:00 | 2.5 hours ahead of India</div>
         </div>
         
         <div class="main-content">
@@ -311,12 +326,6 @@
                         <div class="time-zone-time" id="militaryTime">12:00</div>
                         <div class="time-zone-diff">Military / International format</div>
                     </div>
-                    
-                    <div class="time-zone">
-                        <div class="time-zone-name">CHINESE TIME (CST)</div>
-                        <div class="time-zone-time" id="chineseTime">14:30</div>
-                        <div class="time-zone-diff">UTC +8:00 | 2.5 hours ahead of India</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -334,7 +343,7 @@
         const convertBtn = document.getElementById('convertBtn');
         const indianTimeDisplay = document.getElementById('indianTime');
         const militaryTimeDisplay = document.getElementById('militaryTime');
-        const chineseTimeDisplay = document.getElementById('chineseTime');
+        const chineseTimeTop = document.getElementById('chineseTimeTop');
         
         // Time input variables
         let timeInput = '';
@@ -530,7 +539,7 @@
                 chineseHours -= 24;
             }
             
-            chineseTimeDisplay.textContent = `${chineseHours.toString().padStart(2, '0')}:${chineseMinutes.toString().padStart(2, '0')}`;
+            chineseTimeTop.textContent = `${chineseHours.toString().padStart(2, '0')}:${chineseMinutes.toString().padStart(2, '0')}`;
         }
         
         // Handle convert button
