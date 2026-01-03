@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Zone Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(to right, #2d4059, #1c2d4d);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #4cc9f0, #4361ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 25px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 20px;
+        }
+        
+        .output-section {
+            flex: 1;
+            min-width: 300px;
+            padding-left: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #4cc9f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .time-display {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #f8f9fa;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .time-label {
+            font-size: 1rem;
+            color: #b8c1ec;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        
+        .am-pm-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0 20px;
+            gap: 10px;
+        }
+        
+        .am-pm-btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #b8c1ec;
+        }
+        
+        .am-pm-btn.active {
+            background-color: #4361ee;
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .keypad-btn {
+            padding: 18px 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .keypad-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .keypad-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .keypad-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .clear-btn {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #f8d7da;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .clear-btn:hover {
+            background-color: rgba(220, 53, 69, 0.4);
+        }
+        
+        .convert-btn {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #d4edda;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .convert-btn:hover {
+            background-color: rgba(40, 167, 69, 0.4);
+        }
+        
+        .time-result {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .time-zone {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .time-zone:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .time-zone-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #4cc9f0;
+        }
+        
+        .time-zone-time {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f8f9fa;
+        }
+        
+        .time-zone-diff {
+            color: #b8c1ec;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .input-section, .output-section {
+                padding: 0;
+                margin-bottom: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-globe-asia"></i> Time Zone Converter</h1>
+        </div>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-clock"></i> Enter Indian Time</h2>
+                
+                <div class="time-display">
+                    <div class="time-label">INDIAN TIME (12-hour format)</div>
+                    <div id="timeDisplay">12:00</div>
+                </div>
+                
+                <div class="am-pm-indicator">
+                    <button id="amBtn" class="am-pm-btn active">AM</button>
+                    <button id="pmBtn" class="am-pm-btn">PM</button>
+                </div>
+                
+                <div class="keypad">
+                    <button class="keypad-btn" data-value="1">1</button>
+                    <button class="keypad-btn" data-value="2">2</button>
+                    <button class="keypad-btn" data-value="3">3</button>
+                    <button class="keypad-btn" data-value="4">4</button>
+                    <button class="keypad-btn" data-value="5">5</button>
+                    <button class="keypad-btn" data-value="6">6</button>
+                    <button class="keypad-btn" data-value="7">7</button>
+                    <button class="keypad-btn" data-value="8">8</button>
+                    <button class="keypad-btn" data-value="9">9</button>
+                    <button class="keypad-btn" data-value="0">0</button>
+                    <button class="keypad-btn" data-value=":" id="colonBtn">:</button>
+                    <button class="keypad-btn" id="backspaceBtn"><i class="fas fa-backspace"></i></button>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="clearBtn" class="action-btn clear-btn">
+                        <i class="fas fa-trash-alt"></i> Clear
+                    </button>
+                    <button id="convertBtn" class="action-btn convert-btn">
+                        <i class="fas fa-sync-alt"></i> Convert
+                    </button>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Converted Time</h2>
+                
+                <div class="time-result">
+                    <div class="time-zone">
+                        <div class="time-zone-name">INDIAN TIME (12-hour)</div>
+                        <div class="time-zone-time" id="indianTime">12:00 PM</div>
+                        <div class="time-zone-diff">UTC +5:30</div>
+                    </div>
+                    
+                    <div class="time-zone">
+                        <div class="time-zone-name">24-HOUR FORMAT</div>
+                        <div class="time-zone-time" id="militaryTime">12:00</div>
+                        <div class="time-zone-diff">Military / International format</div>
+                    </div>
+                    
+                    <div class="time-zone">
+                        <div class="time-zone-name">CHINESE TIME (CST)</div>
+                        <div class="time-zone-time" id="chineseTime">14:30</div>
+                        <div class="time-zone-diff">UTC +8:00 | 2.5 hours ahead of India</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const timeDisplay = document.getElementById('timeDisplay');
+        const amBtn = document.getElementById('amBtn');
+        const pmBtn = document.getElementById('pmBtn');
+        const keypadButtons = document.querySelectorAll('.keypad-btn');
+        const colonBtn = document.getElementById('colonBtn');
+        const backspaceBtn = document.getElementById('backspaceBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const convertBtn = document.getElementById('convertBtn');
+        const indianTimeDisplay = document.getElementById('indianTime');
+        const militaryTimeDisplay = document.getElementById('militaryTime');
+        const chineseTimeDisplay = document.getElementById('chineseTime');
+        
+        // Time input variables
+        let timeInput = '';
+        let isAm = true;
+        
+        // Initialize with current time
+        function initializeWithCurrentTime() {
+            const now = new Date();
+            // Convert to Indian time (UTC+5:30)
+            const indianTime = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
+            
+            let hours = indianTime.getHours();
+            let minutes = indianTime.getMinutes();
+            
+            // Determine AM/PM
+            isAm = hours < 12;
+            
+            // Convert to 12-hour format for display
+            const displayHours = hours % 12 || 12;
+            
+            // Format time string
+            timeInput = `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            updateTimeDisplay();
+            updateAmPmButtons();
+            convertTime();
+        }
+        
+        // Update the main time display
+        function updateTimeDisplay() {
+            timeDisplay.textContent = timeInput || '12:00';
+        }
+        
+        // Update AM/PM button states
+        function updateAmPmButtons() {
+            if (isAm) {
+                amBtn.classList.add('active');
+                pmBtn.classList.remove('active');
+            } else {
+                pmBtn.classList.add('active');
+                amBtn.classList.remove('active');
+            }
+        }
+        
+        // Auto-detect AM/PM based on time input
+        function autoDetectAmPm() {
+            if (!timeInput.includes(':')) return;
+            
+            const parts = timeInput.split(':');
+            const hours = parseInt(parts[0]);
+            
+            if (hours >= 0 && hours <= 11) {
+                isAm = true;
+            } else if (hours >= 12 && hours <= 23) {
+                isAm = false;
+            }
+            
+            updateAmPmButtons();
+        }
+        
+        // Format time input as user types
+        function formatTimeInput(value) {
+            // Remove all non-digit characters
+            let digits = value.replace(/\D/g, '');
+            
+            // Limit to 4 digits (HHMM)
+            if (digits.length > 4) {
+                digits = digits.substring(0, 4);
+            }
+            
+            // Format as HH:MM
+            if (digits.length === 0) {
+                return '';
+            } else if (digits.length <= 2) {
+                return digits;
+            } else {
+                return digits.substring(0, 2) + ':' + digits.substring(2, 4);
+            }
+        }
+        
+        // Handle keypad button clicks
+        keypadButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.getAttribute('data-value');
+                
+                if (value) {
+                    // Handle colon separately
+                    if (value === ':') {
+                        // If we already have a colon, do nothing
+                        if (!timeInput.includes(':')) {
+                            // If no digits entered yet, add "00:"
+                            if (timeInput.length === 0) {
+                                timeInput = '00:';
+                            } 
+                            // If we have 1 or 2 digits, add colon
+                            else if (timeInput.length <= 2 && !timeInput.includes(':')) {
+                                timeInput = timeInput + ':';
+                            }
+                        }
+                    } else {
+                        // For digits, format the input
+                        timeInput = formatTimeInput(timeInput + value);
+                        autoDetectAmPm();
+                    }
+                    
+                    updateTimeDisplay();
+                }
+            });
+        });
+        
+        // Handle backspace
+        backspaceBtn.addEventListener('click', () => {
+            if (timeInput.length > 0) {
+                // Remove last character
+                timeInput = timeInput.slice(0, -1);
+                
+                // If we removed the colon, also remove the digit before it
+                if (timeInput.endsWith(':')) {
+                    timeInput = timeInput.slice(0, -1);
+                }
+                
+                // Reformat the time
+                timeInput = formatTimeInput(timeInput);
+                updateTimeDisplay();
+                autoDetectAmPm();
+            }
+        });
+        
+        // Handle clear button
+        clearBtn.addEventListener('click', () => {
+            timeInput = '';
+            isAm = true;
+            updateTimeDisplay();
+            updateAmPmButtons();
+            convertTime();
+        });
+        
+        // Handle AM/PM button clicks
+        amBtn.addEventListener('click', () => {
+            isAm = true;
+            updateAmPmButtons();
+            convertTime();
+        });
+        
+        pmBtn.addEventListener('click', () => {
+            isAm = false;
+            updateAmPmButtons();
+            convertTime();
+        });
+        
+        // Convert time to 24-hour format and Chinese time
+        function convertTime() {
+            let hours = 12;
+            let minutes = 0;
+            
+            // Parse the time input
+            if (timeInput.includes(':')) {
+                const parts = timeInput.split(':');
+                hours = parseInt(parts[0]) || 12;
+                minutes = parseInt(parts[1]) || 0;
+                
+                // Handle 12-hour format conversion
+                if (!isAm && hours < 12) {
+                    hours += 12;
+                } else if (isAm && hours === 12) {
+                    hours = 0;
+                }
+            }
+            
+            // Ensure valid time values
+            hours = Math.min(23, Math.max(0, hours));
+            minutes = Math.min(59, Math.max(0, minutes));
+            
+            // Create Indian time string
+            const indianHours12 = (hours % 12) || 12;
+            const indianAmPm = hours < 12 ? 'AM' : 'PM';
+            indianTimeDisplay.textContent = `${indianHours12.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${indianAmPm}`;
+            
+            // Create 24-hour format string
+            militaryTimeDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            
+            // Calculate Chinese time (India is UTC+5:30, China is UTC+8:00, so +2.5 hours)
+            let chineseHours = hours + 2; // Add 2 hours
+            let chineseMinutes = minutes + 30; // Add 30 minutes
+            
+            // Handle minute overflow
+            if (chineseMinutes >= 60) {
+                chineseHours += 1;
+                chineseMinutes -= 60;
+            }
+            
+            // Handle hour overflow
+            if (chineseHours >= 24) {
+                chineseHours -= 24;
+            }
+            
+            chineseTimeDisplay.textContent = `${chineseHours.toString().padStart(2, '0')}:${chineseMinutes.toString().padStart(2, '0')}`;
+        }
+        
+        // Handle convert button
+        convertBtn.addEventListener('click', convertTime);
+        
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            
+            // Number keys
+            if (key >= '0' && key <= '9') {
+                timeInput = formatTimeInput(timeInput + key);
+                updateTimeDisplay();
+                autoDetectAmPm();
+            }
+            // Colon key
+            else if (key === ':' || key === ';') {
+                if (!timeInput.includes(':')) {
+                    if (timeInput.length === 0) {
+                        timeInput = '00:';
+                    } else if (timeInput.length <= 2 && !timeInput.includes(':')) {
+                        timeInput = timeInput + ':';
+                    }
+                }
+                updateTimeDisplay();
+            }
+            // Backspace key
+            else if (key === 'Backspace') {
+                event.preventDefault();
+                if (timeInput.length > 0) {
+                    timeInput = timeInput.slice(0, -1);
+                    
+                    if (timeInput.endsWith(':')) {
+                        timeInput = timeInput.slice(0, -1);
+                    }
+                    
+                    timeInput = formatTimeInput(timeInput);
+                    updateTimeDisplay();
+                    autoDetectAmPm();
+                }
+            }
+            // Enter key to convert
+            else if (key === 'Enter') {
+                convertTime();
+            }
+            // A key for AM
+            else if (key.toLowerCase() === 'a') {
+                isAm = true;
+                updateAmPmButtons();
+                convertTime();
+            }
+            // P key for PM
+            else if (key.toLowerCase() === 'p') {
+                isAm = false;
+                updateAmPmButtons();
+                convertTime();
+            }
+            // C key to clear
+            else if (key.toLowerCase() === 'c') {
+                timeInput = '';
+                isAm = true;
+                updateTimeDisplay();
+                updateAmPmButtons();
+                convertTime();
+            }
+        });
+        
+        // Initialize with current time
+        initializeWithCurrentTime();
+    </script>
+</body>
+</html>
